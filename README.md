@@ -4,9 +4,10 @@ The [Apache Avro](https://avro.apache.org/) serialization format is quite useful
 when you need to have a schema for your data exchange.
 
 You will face three problems using it on .NET, however:
-    1) The .NET documentation is quite sparse.
-    2) There are multiple implementations, so you will need to pick the right one.
-    3) None of the implementations are complete and support the full Avro spec.
+
+1. The .NET documentation is quite sparse.
+2. There are multiple implementations, so you will need to pick the right one.
+3. None of the .NET implementations are complete and support the full Avro spec (_e.g._ logical types)
 
 This repository contains an example of how to work with Avro in C# and F#.
 
