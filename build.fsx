@@ -18,6 +18,12 @@ module Config =
   let fsharpSrcDir = srcDir </> "fsharp"
   let idlDir = srcDir </> "idl"
   let codeGenOutputDir = csharpSrcDir </> "GeneratedSchemaTypes" </> "generated"
+  // Maps from the Avro namespaces (keys) to the corresponding generated .NET namespaces (values)
+  let codeGenNamespaceMappings =   
+    [
+      // Empty since the code generator in Apache Avro Tools 1.9.1 does not handle it correctly
+      ] 
+    |> Map.ofList
 
 Target.create "Clean" (fun _ ->
     !! (Config.srcDir @@ "/**/bin")
@@ -27,14 +33,19 @@ Target.create "Clean" (fun _ ->
 )
 
 /// Run the 'avrogen' code generator
-let avrogenSchema schema outdir =
+let avrogenSchema schema outdir namespaceMappings=
   // Example command line:
-  //    dotnet avrogen -s .\src\idl\transfers.avsc .\src\csharp\GeneratedSchemaTypes\generated
-  let args = [ "-s"; schema; outdir ] |> Arguments.OfArgs |> Arguments.toWindowsCommandLine
+  //    dotnet avrogen -s .\src\idl\transfers.avsc .\src\csharp\GeneratedSchemaTypes\generated --namespace AvroDotNetLab:AvroDotNetLab.GeneratedSchemaTypes
+  let argList = [
+    yield! [ "-s"; schema; outdir ]
+    for avroNamespace, dotnetNamespace in (namespaceMappings |> Map.toSeq) do
+      yield! ["--namespace"; (sprintf "%s:%s" avroNamespace dotnetNamespace)]
+  ]
+  let args = argList |> Arguments.OfArgs |> Arguments.toWindowsCommandLine
   DotNet.exec id "avrogen" args
 
 Target.create "CodeGenSchemas" (fun _ ->
-  avrogenSchema (Config.idlDir </> "transfers.avsc") Config.codeGenOutputDir |> ignore
+  avrogenSchema (Config.idlDir </> "transfers.avsc") Config.codeGenOutputDir Config.codeGenNamespaceMappings |> ignore
 )
 
 Target.create "CodeGen" (fun _ ->

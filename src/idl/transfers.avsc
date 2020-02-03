@@ -1,5 +1,5 @@
 {
-    "namespace": "AvroDotNetLab",
+    "namespace": "AvroDotNetLab.Schemas",
     "type": "record",
     "name": "TransferRequest",
     "fields": [
