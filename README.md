@@ -1,17 +1,23 @@
 # Using Apache Avro on .NET
 
-The (Apache Avro)[https://avro.apache.org/] serialization format is quite useful (_e.g._ for Kafka Streams) or 
+The [Apache Avro](https://avro.apache.org/) serialization format is quite useful (_e.g._ for Kafka Streams) or 
 when you need to have a schema for your data exchange.
 
-You will face two problems using it on .NET, however:
+You will face three problems using it on .NET, however:
     1) The .NET documentation is quite sparse.
     2) There are multiple implementations, so you will need to pick the right one.
+    3) None of the implementations are complete and support the full Avro spec.
 
-This repository contains an example of how to use it in C# and F#.
+This repository contains an example of how to work with Avro in C# and F#.
+
+- The Avro schemas are defined in the [src\idl](src/idl) folder.
+- Classes for schema types are generated with `avrogen`, see the [GeneratedSchemaTypes](src\csharp\GeneratedSchemaTypes) project.
+- The F# tool to read and write records is in [src\fsharp\AvroFSharp](src\fsharp\AvroFSharp)
+- The C# tool is in [src\csharp\AvroCSharp](src\csharp\AvroCSharp)
 
 ## Building the Code
 
-The code uses the (Fake)[https://fake.build] command-line tool to build:
+The code uses the [Fake](https://fake.build) command-line tool to build:
 
 The tools are described in the `.config\dotnet-tools.json` manifest, 
 so you only have to and issue the installation and build command:
@@ -19,7 +25,7 @@ so you only have to and issue the installation and build command:
     dotnet tool restore
     dotnet fake build
 
-The build itself is described in the (`build.fsx`)[build.fsx] file.
+The build itself is described in the [`build.fsx`](build.fsx) file.
 
 
 ## Defining Schemas
@@ -27,11 +33,11 @@ The build itself is described in the (`build.fsx`)[build.fsx] file.
 Avro offers a succinct IDL format and a verbose JSON format to describe 
 the schemas and protocols.
 
-The definitions are in the (`src\idl`)[src\idl] folder.
+The definitions are in the [`src\idl`](src\idl) folder.
 
 ### Logical Types
 Note that there is no support for converting .NET types to and from `logicalTypes` yet (_e.g._ to date or fixed decimal) in the Apache Avro library nor in the Confluent fork.
-It is supported in _e.g._ the Java library. It is underway in PR (AVRO-2359: Support Logical Types in C#)[https://github.com/apache/avro/pull/492].
+It is supported in _e.g._ the Java library. It is underway in PR [AVRO-2359: Support Logical Types in C#](https://github.com/apache/avro/pull/492).
 
 
 ## Code Generation
@@ -46,7 +52,7 @@ there is something in the Confluent fork you absolutely need for the moment.
 
 ### Chr.Avro Code Generator
 
-The (Chr.Avro)[https://engineering.chrobinson.com/dotnet-avro/] code generator looked promising, but
+The [Chr.Avro](https://engineering.chrobinson.com/dotnet-avro/) code generator looked promising, but
 could not handle union types (_e.g._ the two types of bank accounts in the example IDL):
 
     dotnet tool install Chr.Avro.Cli --global
@@ -59,7 +65,7 @@ Conclusion: *Not recommended.*
 
 ### Confluent Code Generator
 
-The (Confluent Code Generator)[https://www.nuget.org/packages/Confluent.Apache.Avro.AvroGen/] does a better job.
+The [Confluent Code Generator](https://www.nuget.org/packages/Confluent.Apache.Avro.AvroGen/) does a better job.
 Unions are represented as the .NET type `object` but that will do.
 
 You can install it as a global tool like this:
@@ -91,12 +97,9 @@ And to generate the code into the `generated` directory:
 
 
 
-
-
 ## Developer Information
 
-The C# project is a skeleton project file used to build the generated code 
-when the Avro schemas have been compiled.
+The C# project is a skeleton project file used to build the generated code when the Avro schemas have been compiled.
 
 ### Visual Studio Code
 
