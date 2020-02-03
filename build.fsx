@@ -50,7 +50,11 @@ Target.create "Build" (fun _ ->
 
 Target.create "All" ignore
 
+"CodeGenSchemas" 
+  ==> "CodeGen"
+
 "Clean"
+  ==> "CodeGen"
   ==> "Build"
   ==> "All"
 

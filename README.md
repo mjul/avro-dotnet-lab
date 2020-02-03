@@ -29,6 +29,11 @@ the schemas and protocols.
 
 The definitions are in the (`src\idl`)[src\idl] folder.
 
+### Logical Types
+Note that there is no support for converting .NET types to and from `logicalTypes` yet (_e.g._ to date or fixed decimal) in the Apache Avro library nor in the Confluent fork.
+It is supported in _e.g._ the Java library. It is underway in PR (AVRO-2359: Support Logical Types in C#)[https://github.com/apache/avro/pull/492].
+
+
 ## Code Generation
 I tried different code generators.
 
@@ -38,7 +43,6 @@ will be discontinued when it is released with the Avro 1.10 release (soon?).
 
 My advice is to use `Apache.Avro` and the code-generator `Apache.Avro.Tools` unless
 there is something in the Confluent fork you absolutely need for the moment.
-
 
 ### Chr.Avro Code Generator
 
@@ -84,6 +88,8 @@ Then to install the local tools:
 And to generate the code into the `generated` directory:
 
     dotnet avrogen .\idl\transfers.avsc  .\src\csharp\GeneratedSchemaTypes\generated\
+
+
 
 
 

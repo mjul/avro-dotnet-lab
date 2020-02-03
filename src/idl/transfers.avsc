@@ -59,7 +59,7 @@
                         },
                         {
                             "name": "kontonr",
-                            "type": "int",
+                            "type": "string",
                             "doc": "Kontonummer (eng.: Account Number). 4-10 digits, with or without leading zeros."
                         }
                     ]
