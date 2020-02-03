@@ -23,7 +23,7 @@ namespace AvroCSharp
             {
                 metadata = new Metadata()
                 {
-                    sender = "upstream-system",
+                    sender = "avro-csharp",
                     senderCorrelationId = "tx-request-1234",
                 },
                 amount = new Amount
