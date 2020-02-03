@@ -7,6 +7,12 @@
       "commands": [
         "fake"
       ]
+    },
+    "apache.avro.tools": {
+      "version": "1.9.1",
+      "commands": [
+        "avrogen"
+      ]
     }
   }
 }
