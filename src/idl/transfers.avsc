@@ -1,0 +1,116 @@
+{
+    "namespace": "AvroDotNetLab",
+    "type": "record",
+    "name": "TransferRequest",
+    "fields": [
+        {
+            "name": "metadata",
+            "type": {
+                "name": "Metadata",
+                "type": "record",
+                "doc": "Metadata about the transfer.",
+                "fields": [
+                    {
+                        "name": "sender",
+                        "type": "string"
+                    },
+                    {
+                        "name": "senderCorrelationId",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "amount",
+            "type": {
+                "name": "Amount",
+                "type": "record",
+                "doc": "The amount to transfer.",
+                "fields": [
+                    {
+                        "name": "amount",
+                        "type": "bytes",
+                        "logicalType": "decimal",
+                        "precision": 2,
+                        "doc": "The amount itself."
+                    },
+                    {
+                        "name": "currencyCode",
+                        "type": "string",
+                        "doc": "The ISO 4217 currency code."
+                    }
+                ]
+            }
+        },
+        {
+            "name": "from",
+            "doc": "The account where the transfer is coming from.",
+            "type": [
+                {
+                    "name": "DanishAccount",
+                    "type": "record",
+                    "doc": "Danish account identifier.",
+                    "fields": [
+                        {
+                            "name": "regnr",
+                            "type": "string",
+                            "doc": "Registreringsnummer (eng.: Sort Code). 4 digits (with leading zero."
+                        },
+                        {
+                            "name": "kontonr",
+                            "type": "int",
+                            "doc": "Kontonummer (eng.: Account Number). 4-10 digits, with or without leading zeros."
+                        }
+                    ]
+                },
+                {
+                    "name": "IbanAccount",
+                    "type": "record",
+                    "doc": "IBAN account identifier.",
+                    "fields": [
+                        {
+                            "name": "countryCode",
+                            "type": "string",
+                            "doc": "ISO 3166-1 alpha-2 two-letter country code."
+                        },
+                        {
+                            "name": "checkDigits",
+                            "type": "int",
+                            "doc": "Two digits"
+                        },
+                        {
+                            "name": "BBAN",
+                            "type": "string",
+                            "doc": "Bank account identifier"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "to",
+            "doc": "The account where the transfer is going to.",
+            "type": [
+                "DanishAccount",
+                "IbanAccount"
+            ]
+        },
+        {
+            "name": "date",
+            "type": "bytes",
+            "logicalType": "date",
+            "doc": "The date to make the transfer."
+        },
+        {
+            "name": "senderIdentifier",
+            "type": "string",
+            "doc": "Text for the payer's account statement to help identify the transfer."
+        },
+        {
+            "name": "recipientIdentifier",
+            "type": "string",
+            "doc": "Text for the recipient's account statement to help identify the transfer."
+        }
+    ]
+}
