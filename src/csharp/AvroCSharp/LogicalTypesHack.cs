@@ -3,9 +3,6 @@ using System.IO;
 using Avro;
 using Avro.Specific;
 
-// Use our generated types:
-using AvroDotNetLab;
-
 namespace AvroCSharp
 {
     internal class LogicalTypesHack

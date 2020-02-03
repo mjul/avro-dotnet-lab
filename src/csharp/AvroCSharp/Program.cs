@@ -4,7 +4,7 @@ using Avro;
 using Avro.Specific;
 
 // Use our generated types:
-using AvroDotNetLab;
+using AvroDotNetLab.Schemas;
 
 namespace AvroCSharp
 {
