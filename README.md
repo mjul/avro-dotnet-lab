@@ -10,10 +10,10 @@ You will face three problems using it on .NET, however:
 
 This repository contains an example of how to work with Avro in C# and F#.
 
-- The Avro schemas are defined in the [src\idl](src/idl) folder.
-- Classes for schema types are generated with `avrogen`, see the [GeneratedSchemaTypes](src\csharp\GeneratedSchemaTypes) project.
-- The F# tool to read and write records is in [src\fsharp\AvroFSharp](src\fsharp\AvroFSharp)
-- The C# tool is in [src\csharp\AvroCSharp](src\csharp\AvroCSharp)
+- The Avro schemas are defined in the [`src\idl`](src/idl) folder.
+- Classes for schema types are generated with `avrogen`, see the [GeneratedSchemaTypes](src/csharp/GeneratedSchemaTypes) project.
+- The F# tool to read and write records is in [src\fsharp\AvroFSharp](src/fsharp/AvroFSharp)
+- The C# tool is in [src\csharp\AvroCSharp](src/csharp/AvroCSharp)
 
 ## Building the Code
 
@@ -33,7 +33,7 @@ The build itself is described in the [`build.fsx`](build.fsx) file.
 Avro offers a succinct IDL format and a verbose JSON format to describe 
 the schemas and protocols.
 
-The definitions are in the [`src\idl`](src\idl) folder.
+The definitions are in the [`src\idl`](src/idl) folder.
 
 ### Logical Types
 Note that there is no support for converting .NET types to and from `logicalTypes` yet (_e.g._ to date or fixed decimal) in the Apache Avro library nor in the Confluent fork.
