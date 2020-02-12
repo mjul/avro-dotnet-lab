@@ -12,7 +12,6 @@ module LogicalTypesHack =
     open Avro.IO
     open Avro.Generic
 
-    let UnixEpoch = DateTime(1970, 1, 1)
     let MoneyScale = 100m
     let IntSchema = PrimitiveSchema.NewInstance("int", null)
 
@@ -39,10 +38,10 @@ module LogicalTypesHack =
         // while we are waiting for the PR to merge support for logical types in the C# libray.
         // Dates are encoded as an int representing the days since the Unix Epoch.
         let daysSinceEpoch = fromAvroIntBytes value
-        UnixEpoch.AddDays(float daysSinceEpoch).Date
+        DateTime.UnixEpoch.AddDays(float daysSinceEpoch).Date
     
     let toLogicalTypeDateBytes (value:DateTime) =
-        let daysSinceEpoch = Convert.ToInt32(value.Subtract(UnixEpoch).TotalDays)
+        let daysSinceEpoch = Convert.ToInt32(value.Subtract(DateTime.UnixEpoch).TotalDays)
         toAvroIntBytes daysSinceEpoch
     
 
