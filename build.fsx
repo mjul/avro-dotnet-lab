@@ -45,7 +45,10 @@ let avrogenSchema schema outdir namespaceMappings=
   DotNet.exec id "avrogen" args
 
 Target.create "CodeGenSchemas" (fun _ ->
-  avrogenSchema (Config.idlDir </> "transfers.avsc") Config.codeGenOutputDir Config.codeGenNamespaceMappings |> ignore
+  !! (Config.idlDir @@ "*.avsc")
+  |> Seq.iter (fun schemaFile ->
+    avrogenSchema schemaFile Config.codeGenOutputDir Config.codeGenNamespaceMappings |> ignore
+  )
 )
 
 Target.create "CodeGen" (fun _ ->

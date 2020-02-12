@@ -1,0 +1,23 @@
+{
+    "namespace": "AvroDotNetLab.Schemas.Lists",
+    "type": "record",
+    "name": "ListOfStuff",
+    "fields": [
+        {
+            "name": "items",
+            "type": {
+                "type": "array",
+                "items": {
+                    "type": "record",
+                    "name": "Stuff",
+                    "fields": [
+                        {
+                            "type": "string",
+                            "name": "name"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
