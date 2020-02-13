@@ -7,7 +7,6 @@ namespace AvroCSharp
 {
     internal class LogicalTypesHack
     {
-        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1);
         const int MONEY_SCALE = 100;
 
         internal static byte[] ToAvroInt(int value) {
@@ -42,11 +41,11 @@ namespace AvroCSharp
             // while we are waiting for the PR to merge support for logical types in the C# libray.
             // Dates are encoded as an int representing the days since the Unix Epoch.
             var daysSinceEpoch = FromAvroInt(value);
-            return UnixEpoch.AddDays(daysSinceEpoch).Date;
+            return DateTime.UnixEpoch.AddDays(daysSinceEpoch).Date;
         }
         internal static byte[] ToLogicalTypeDate(DateTime value)
         {
-            int daysSinceEpoch = Convert.ToInt32(value.Subtract(UnixEpoch).TotalDays);
+            int daysSinceEpoch = Convert.ToInt32(value.Subtract(DateTime.UnixEpoch).TotalDays);
             return ToAvroInt(daysSinceEpoch);
         }
 
