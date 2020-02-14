@@ -120,7 +120,7 @@ namespace AvroCSharp
         {
             TransferRequest result = null;
             using (var avroFileReader =
-                Avro.File.DataFileReader<TransferRequest>.OpenReader(file))
+                Avro.File.DataFileReader<TransferRequest>.OpenReader(file, TransferRequest._SCHEMA))
             {
                 // Just read a single record
                 result = avroFileReader.Next();
