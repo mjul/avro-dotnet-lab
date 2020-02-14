@@ -348,3 +348,14 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+generated/
+
+# The Avro tools etc.
+*.jar
+
+# Jetbrains IDE settings (Rider, PyCharm...)
+.idea/
+
+# Our test data files
+tmp/
