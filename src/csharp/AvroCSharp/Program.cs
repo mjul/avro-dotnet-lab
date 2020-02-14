@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Avro;
 using Avro.File;
+using Avro.Generic;
 using Avro.Specific;
 
 // Use our generated types:
@@ -99,11 +100,15 @@ namespace AvroCSharp
             using (var stream = new FileStream(file, FileMode.Create))
             {
                 // The Avro.Specific namespace is for writing a single datum (no container)
-                var datumWriter = new Avro.Specific.SpecificDatumWriter<TransferRequest>(value.Schema);
+                // SpecificDatumWriter is for writing the generated classes
+                var datumWriter = new SpecificDatumWriter<TransferRequest>(value.Schema);
+
                 // Note that the Avro.File namespace is for the file containers
                 // Optionally we could also specify the codec (compression and or checksums)
-                var avroFileWriter = Avro.File.DataFileWriter<TransferRequest>.OpenWriter(datumWriter, stream);
-                avroFileWriter.Append(value);
+                using (var avroFileWriter = Avro.File.DataFileWriter<TransferRequest>.OpenWriter(datumWriter, stream))
+                {
+                    avroFileWriter.Append(value);
+                }
             }
         }
 
@@ -115,14 +120,13 @@ namespace AvroCSharp
         {
             TransferRequest result = null;
             using (var avroFileReader =
-                Avro.File.DataFileReader<TransferRequest>.OpenReader(file, TransferRequest._SCHEMA))
+                Avro.File.DataFileReader<TransferRequest>.OpenReader(file))
             {
                 // Just read a single record
                 result = avroFileReader.Next();
                 // If we want to read all data in the file we can stream
                 // all rows using avroFileReader.NextEntries;
             }
-
             return result;
         }
 
