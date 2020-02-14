@@ -38,18 +38,23 @@ Save a record to an Avro file container in the tmp directory:
 
     dotnet run --project src\csharp\AvroCSharp save-file tmp\transfer.avro
 
+or
+
+    dotnet run --project src\fsharp\AvroFSharp save-file tmp\transfer.avro
+
 Load the record from the Avro file container:
 
     dotnet run --project src\csharp\AvroCSharp load-file tmp\transfer.avro
 
-Get the schema from the container using Avro Tools (see below):
+or
 
-    java -jar avro-tools-1.9.2.jar getschema tmp\transfer.avro    
+     dotnet run --project src\fsharp\AvroFSharp load-file tmp\transfer.avro    
+
 
 ## Avro Tools
 
 The best Avro tools are only available Java tools jar.
-you can get them here:
+You can get them here:
 
 ```PowerShell
     wget http://www.us.apache.org/dist/avro/avro-1.9.2/java/avro-tools-1.9.2.jar -OutFile avro-tools-1.9.2.jar
@@ -61,7 +66,16 @@ The command-line tool will list all its possibilities if you invoke it like this
 
 It has useful tools for showing querying file schemas and metadata, converting between binary and human-readable text 
 representations of you data (text and json), compiling schema IDL to the JSON schema format.
- 
+
+If you have saved an Avro file with the applications in `tmp\transfer.avro` you can use the tools like this:
+
+Get the schema from the container using Avro Tools (see below):
+
+    java -jar avro-tools-1.9.2.jar getschema tmp\transfer.avro    
+
+Read the Avro File as JSON:
+
+    java -jar .\avro-tools-1.9.2.jar tojson .\tmp\transfer.avro
 
 ## Defining Schemas
 
