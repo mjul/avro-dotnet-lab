@@ -21,7 +21,7 @@ module LogicalTypesHack =
         use ms = new MemoryStream() 
         let encoder = BinaryEncoder(ms)
         writer.Write(value, encoder)
-        let result = ms.GetBuffer()
+        let result = ms.ToArray()
         result
 
     /// Quick hack to read an int from its Avro stream representation in the byte array.

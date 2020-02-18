@@ -17,7 +17,7 @@ namespace AvroCSharp
             using (var ms = new MemoryStream()) {
                 var encoder = new Avro.IO.BinaryEncoder(ms);
                 writer.Write(value, encoder);
-                result = ms.GetBuffer();
+                result = ms.ToArray();
             }
             return result;
         }
