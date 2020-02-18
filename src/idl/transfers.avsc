@@ -32,8 +32,9 @@
                         "name": "amount",
                         "type": "bytes",
                         "logicalType": "decimal",
-                        "precision": 2,
-                        "doc": "The amount itself."
+                        "precision": 12,
+                        "scale": 2,
+                        "doc": "The amount itself. Scale: two decimals, precision: up to 12 digits in total including the decimals."
                     },
                     {
                         "name": "currencyCode",
