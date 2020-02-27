@@ -8,30 +8,10 @@ module LogicalTypesHack =
 
     open System
     open System.Numerics
-    open System.IO
-    open Avro
-    open Avro.IO
-    open Avro.Generic
 
-    let MoneyScale = 100m
-    let IntSchema = PrimitiveSchema.NewInstance("int", null)
-
-    /// Quick hack to write an int to its Avro stream representation in a byte array.
-    let toAvroIntBytes value =
-        let writer = GenericWriter<int>(IntSchema)
-        use ms = new MemoryStream()
-        let encoder = BinaryEncoder(ms)
-        writer.Write(value, encoder)
-        let result = ms.ToArray()
-        result
-
-    /// Quick hack to read an int from its Avro stream representation in the byte array.
-    let fromAvroIntBytes (value: byte array) =
-        let reader = GenericReader<int>(IntSchema, IntSchema)
-        use ms = new MemoryStream(value)
-        let decoder = BinaryDecoder(ms)
-        reader.Read(0, decoder)
-
+    // Hack: to keep it simple, we always use two decimals.
+    let MoneyScale = 2
+    let MoneyScaleMultiplier = 10. ** (double MoneyScale) |> decimal
 
     /// Read the logical type Date from its Avro representation as an integer.
     let fromLogicalTypeDateInt (value: int32) =
@@ -46,11 +26,17 @@ module LogicalTypesHack =
         let daysSinceEpoch = Convert.ToInt32(value.Subtract(DateTime.UnixEpoch).TotalDays)
         daysSinceEpoch
 
+    /// Convert a decimal to its logical type decimal (byte array) representation.
     let toLogicalTypeMoneyDecimalBytes (value: decimal) =
-        // hack: we use a fixed scale of two decimals
-        let unscaled = BigInteger(Decimal.Round(MoneyScale * value, 0))
+        // hack: we use a fixed scale
+        let unscaled = BigInteger(Decimal.Round(MoneyScaleMultiplier * value, 0))
+        // From the spec:
+        // The byte array must contain the two's-complement representation of the
+        // unscaled integer value in big-endian byte order.
         unscaled.ToByteArray(isUnsigned = false, isBigEndian = true)
 
-    let fromLogicalTypeMoneyDecimalBytes (value: byte array) =
-        let unscaled = new BigInteger(ReadOnlySpan(value), isUnsigned = false, isBigEndian = true)
-        (unscaled / BigInteger(MoneyScale)) |> decimal
+    
+    /// Convert the byte array representing a logical type decimal to its Decimal representation.
+    let fromLogicalTypeMoneyDecimalBytes (value: byte array) : decimal =
+        let unscaled = BigInteger(ReadOnlySpan(value), isUnsigned = false, isBigEndian = true)
+        (decimal unscaled) / MoneyScaleMultiplier 
