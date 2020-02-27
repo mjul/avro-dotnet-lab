@@ -2,6 +2,7 @@ module Tests
 
 open AvroDotNetLab.AvroFSharp
 open System
+open System.Collections.Generic
 open Xunit
 
 type LogicalTypesHackTests() =
@@ -50,3 +51,23 @@ type LogicalTypesHackTests() =
             |> LogicalTypesHack.toLogicalTypeMoneyDecimalBytes
             |> LogicalTypesHack.fromLogicalTypeMoneyDecimalBytes
         Assert.Equal(value, actual)
+
+    [<Fact>]
+    let ``Logical decimal serialization should be unscaled big endian value`` () =
+        let actual = (decimal 1) |> LogicalTypesHack.toLogicalTypeMoneyDecimalBytes
+        // we assume a scale of two
+        Assert.Equal<IEnumerable<byte>>([|100uy|], actual)
+        
+    [<Fact>]
+    let ``Logical decimal serialization should be unscaled big endian value for bigger numbers`` () =
+        let actual = (decimal 10000) |> LogicalTypesHack.toLogicalTypeMoneyDecimalBytes
+        // we assume a scale of two
+        // 0x0f4240 is 100000, the unscaled 10000
+        Assert.Equal<IEnumerable<byte>>([|0x0Fuy;0x42uy;0x40uy|], actual)
+
+    [<Fact>]
+    let ``Logical decimal serialization should be unscaled big endian value for decimal numbers`` () =
+        let actual = (decimal 10000.42) |> LogicalTypesHack.toLogicalTypeMoneyDecimalBytes
+        // we assume a scale of two
+        // 0x0f426A is 100042, the unscaled 10042
+        Assert.Equal<IEnumerable<byte>>([|0x0Fuy;0x42uy;0x6Auy|], actual)
