@@ -99,7 +99,7 @@
         },
         {
             "name": "date",
-            "type": "bytes",
+            "type": "int",
             "logicalType": "date",
             "doc": "The date to make the transfer."
         },

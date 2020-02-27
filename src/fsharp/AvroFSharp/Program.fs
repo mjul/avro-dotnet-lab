@@ -30,7 +30,7 @@ module Program =
         TransferRequest(
             metadata = Metadata(sender="avro-fsharp", senderCorrelationId="tx-fs-1"),
             amount = Amount(amount=LogicalTypesHack.toLogicalTypeMoneyDecimalBytes(200m), currencyCode="DKK"),
-            date = LogicalTypesHack.toLogicalTypeDateBytes(new DateTime(2020,02,4)),
+            date = LogicalTypesHack.toLogicalTypeDateInt(new DateTime(2020,02,4)),
             from = DanishAccount(regnr = "2000", kontonr = "1111222333"),
             ``to`` = IbanAccount(countryCode = "DK", checkDigits = 44, BBAN="1111000333"),
             senderIdentifier = "Award payment tx-fs-1",
@@ -79,7 +79,7 @@ module Program =
             | :? IbanAccount as iban -> sprintf "IBAN account %s%i %s" iban.countryCode iban.checkDigits iban.BBAN
             | _ -> "Unknown"
         printfn "Transfer request: on %s transfer %M %s from %s to %s" 
-            ((value.date |> fromLogicalTypeDateBytes).ToString("yyyy-MM-dd"))
+            ((value.date |> fromLogicalTypeDateInt).ToString("yyyy-MM-dd"))
             (value.amount.amount |> fromLogicalTypeMoneyDecimalBytes) (value.amount.currencyCode)
             (value.from |> formatAccount)
             (value.``to`` |> formatAccount)
