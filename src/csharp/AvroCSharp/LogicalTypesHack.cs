@@ -1,40 +1,13 @@
 using System;
-using System.IO;
-using Avro;
-using Avro.Specific;
+using System.Numerics;
 
 namespace AvroCSharp
 {
-    internal class LogicalTypesHack
+    public class LogicalTypesHack
     {
-        const int MONEY_SCALE = 100;
-
-        internal static byte[] ToAvroInt(int value) {
-            // Quick hack to write an int to its Avro stream representation in a byte array.
-            var intSchema = PrimitiveSchema.NewInstance("int", null);
-            var writer = new Avro.Generic.GenericWriter<int>(intSchema);
-            byte[] result = null;
-            using (var ms = new MemoryStream()) {
-                var encoder = new Avro.IO.BinaryEncoder(ms);
-                writer.Write(value, encoder);
-                result = ms.ToArray();
-            }
-            return result;
-        }
-
-        internal static int FromAvroInt(byte[] value) {
-            // Quick hack to read an int from its Avro stream representation in the byte array.
-            var intSchema = PrimitiveSchema.NewInstance("int", null);
-            var reader = new Avro.Generic.GenericReader<int>(intSchema, intSchema);
-            int result = -1;
-            using (var ms = new MemoryStream(value)) {
-                var decoder = new Avro.IO.BinaryDecoder(ms);
-                result = reader.Read(0, decoder);
-            }
-            return result;
-        }
-
-
+        private const int MoneyScale = 2;
+        private static readonly decimal MoneyScaleMultiplier = Convert.ToDecimal(Math.Pow(10.0, MoneyScale));
+            
         internal static DateTime FromLogicalTypeDate(Int32 value)
         {
             // A quick hack ad hoc conversion based on https://github.com/timjroberts/avro/blob/AVRO-2359-logical-types/lang/csharp/src/apache/main/Util/Date.cs
@@ -49,18 +22,18 @@ namespace AvroCSharp
             return daysSinceEpoch;
         }
 
-        
-        internal static byte[] ToLogicalTypeMoneyDecimal(decimal value)
+
+        public static byte[] ToLogicalTypeMoneyDecimal(decimal value)
         {
             // hack: we use a fixed scale of two decimals
-            var unscaled = Convert.ToInt32(MONEY_SCALE * value);
-            return ToAvroInt(unscaled);
+            var unscaled = new BigInteger(MoneyScaleMultiplier * value);
+            return unscaled.ToByteArray(isUnsigned: false, isBigEndian: true);
         }
 
-        internal static Decimal FromLogicalTypeMoneyDecimal(byte[] value)
+        public static Decimal FromLogicalTypeMoneyDecimal(byte[] value)
         {
-            var unscaled = FromAvroInt(value);
-            return ((decimal)unscaled)/MONEY_SCALE; 
+            var unscaled = new BigInteger(new ReadOnlySpan<byte>(value), isUnsigned:false, isBigEndian:true);
+            return ((decimal)unscaled)/MoneyScaleMultiplier; 
         }
     }
 }
